@@ -1,9 +1,6 @@
 #
-import json
-
-#
 from django.db.models import F
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -150,6 +147,8 @@ def add_question(request):
                          pub_date=datetime.now()
                          )
             q.save()
+            log = UserLog(user=puser, action_time=datetime.now(), action="question+")
+            log.save()
             return HttpResponseRedirect("/polls/" + str(q.id))
 
 
@@ -165,6 +164,9 @@ def add_choice(request, question_id):
         else:
             choice_text = request.POST["choice"]
             Choice.objects.create(question=question, choice_text=choice_text)
+            user = PollUser.objects.get(user=request.user)
+            log = UserLog(user=user, action_time=datetime.now(), action="choice+")
+            log.save()
             return HttpResponseRedirect(reverse("polls:detail", args=[question.id]))
     else:
         return HttpResponseRedirect("/polls/login/")

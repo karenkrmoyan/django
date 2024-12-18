@@ -38,7 +38,9 @@ class UserLog(models.Model):
         ("login", "Login Successfully"),
         ("question", "Look question list"),
         ("vote", "Vote a question"),
-        ("detail", "View single question info")
+        ("detail", "View single question info"),
+        ("choice+", "Adding a choice to a question"),
+        ("question+", "Adding a new question")
     ]
 
     user = models.ForeignKey(PollUser, on_delete=models.CASCADE)
